@@ -13,7 +13,7 @@ const InputForm = ({ enteredValues, updateValues }: InputFormProps) => {
 
             {/* Section 1 */}
             <Grid container spacing={2}>
-                <Grid size={6}>
+                <Grid size={4}>
                     <Stack spacing={2}>
                         <DateField
                             label="Today's Date"
@@ -23,36 +23,17 @@ const InputForm = ({ enteredValues, updateValues }: InputFormProps) => {
                             }}
                             format="MM/DD/YYYY" />
                         <DateField
-                            label="Spouse Birthdate"
-                            value={enteredValues.spouseBirthdate}
-                            onChange={(newVal) => {
-                                updateValues({ spouseBirthdate: newVal! });
-                            }}
-                            format="MM/DD/YYYY" />
-                        <TextField
-                            label="My Age Now"
-                            type="number"
-                            value={enteredValues.myAgeNow}
-                            onChange={(e) => {
-                                updateValues({ myAgeNow: Number(e.target.value) })
-                            }}
-                        />
-                        <DateField
-                            label="Start Social Security for Myself in This Year"
-                            value={enteredValues.startSocialSecurity}
-                            onChange={(newVal) => {
-                                updateValues({ startSocialSecurity: newVal! });
-                            }}
-                            format="MM/DD/YYYY" />
-                    </Stack>
-                </Grid>
-                <Grid size={6}>
-                    <Stack spacing={2}>
-                        <DateField
                             label="My Birthdate"
                             value={enteredValues.myBirthdate}
                             onChange={(newVal) => {
                                 updateValues({ myBirthdate: newVal! });
+                            }}
+                            format="MM/DD/YYYY" />
+                        <DateField
+                            label="Spouse Birthdate"
+                            value={enteredValues.spouseBirthdate}
+                            onChange={(newVal) => {
+                                updateValues({ spouseBirthdate: newVal! });
                             }}
                             format="MM/DD/YYYY" />
                         <DateField
@@ -62,6 +43,18 @@ const InputForm = ({ enteredValues, updateValues }: InputFormProps) => {
                                 updateValues({ targetRetirementDate: newVal! });
                             }}
                             format="MM/DD/YYYY" />
+                    </Stack>
+                </Grid>
+                <Grid size={4}>
+                    <Stack spacing={2}>
+                        <TextField
+                            label="My Age Now"
+                            type="number"
+                            value={enteredValues.myAgeNow}
+                            onChange={(e) => {
+                                updateValues({ myAgeNow: Number(e.target.value) })
+                            }}
+                        />
                         <TextField
                             label="Spouse Age Now"
                             type="number"
@@ -70,6 +63,13 @@ const InputForm = ({ enteredValues, updateValues }: InputFormProps) => {
                                 updateValues({ spouseAgeNow: Number(e.target.value) })
                             }}
                         />
+                        <DateField
+                            label="Start Social Security for Myself in This Year"
+                            value={enteredValues.startSocialSecurity}
+                            onChange={(newVal) => {
+                                updateValues({ startSocialSecurity: newVal! });
+                            }}
+                            format="MM/DD/YYYY" />
                         <DateField
                             label="Start Social Security for Spouse in This Year"
                             value={enteredValues.spouseStartSocialSecurity}
@@ -83,7 +83,7 @@ const InputForm = ({ enteredValues, updateValues }: InputFormProps) => {
             
             <Grid container spacing={2}>
                 {/* Section 2 */}
-                <Grid size={6}>
+                <Grid size={5}>
                     <Stack spacing={2}>
                         <Typography variant="body1" style={{ marginTop: '2rem' }}>
                             Enter Your Monthly Social Security Income at:
@@ -209,7 +209,7 @@ const InputForm = ({ enteredValues, updateValues }: InputFormProps) => {
                 </Grid>
 
                 {/* Section 3 */}
-                <Grid size={6}>
+                <Grid size={5}>
                     <Stack spacing={2}>
                         <Typography variant="body1" style={{ marginTop: '2rem' }}>
                             Enter Your Spouse's Monthly Social Security Income at:
