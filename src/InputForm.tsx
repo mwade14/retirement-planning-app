@@ -40,6 +40,10 @@ const InputForm = ({ enteredValues, updateValues }: InputFormProps) => {
                                 updateValues({ spouseBirthdate: newVal! });
                             }}
                             format="MM/DD/YYYY" />
+                    </Stack>
+                </Grid>
+                <Grid size={4}>
+                    <Stack spacing={2}>
                         <DateField
                             label="Target Retirement Date"
                             value={enteredValues.targetRetirementDate}
@@ -47,26 +51,6 @@ const InputForm = ({ enteredValues, updateValues }: InputFormProps) => {
                                 updateValues({ targetRetirementDate: newVal! });
                             }}
                             format="MM/DD/YYYY" />
-                    </Stack>
-                </Grid>
-                <Grid size={4}>
-                    <Stack spacing={2}>
-                        <TextField
-                            label="My Age Now"
-                            type="number"
-                            value={enteredValues.myAgeNow}
-                            onChange={(e) => {
-                                updateValues({ myAgeNow: Number(e.target.value) })
-                            }}
-                        />
-                        <TextField
-                            label="Spouse Age Now"
-                            type="number"
-                            value={enteredValues.spouseAgeNow}
-                            onChange={(e) => {
-                                updateValues({ spouseAgeNow: Number(e.target.value) })
-                            }}
-                        />
                         <DateField
                             label="Start Social Security for Myself in This Year"
                             value={enteredValues.startSocialSecurity}
@@ -418,7 +402,7 @@ const InputForm = ({ enteredValues, updateValues }: InputFormProps) => {
                 <Grid size={8}>
                     <Stack spacing={2}>
                         <TextField
-                            label="Total Monetary Assets Invested To Date (pre and post tax investments)"
+                            label="Total Monetary Assets Invested Today (pre and post tax investments)"
                             type="number"
                             value={enteredValues.monetaryAssets}
                             slotProps={{

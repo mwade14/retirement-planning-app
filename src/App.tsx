@@ -2,14 +2,13 @@ import { useState } from 'react';
 import { Typography, Box, Button } from '@mui/material';
 import dayjs, { Dayjs } from 'dayjs';
 import InputForm from './InputForm';
+import OutputTable from './OutputTable';
 
 export type AllInputValues = {
   todaysDate: Dayjs,
   myBirthdate: Dayjs | null,
   spouseBirthdate: Dayjs | null,
   targetRetirementDate: Dayjs | null,
-  myAgeNow: number | null,
-  spouseAgeNow: number | null,
   startSocialSecurity: Dayjs | null,
   spouseStartSocialSecurity: Dayjs | null,
 
@@ -61,8 +60,6 @@ const initialValues: AllInputValues = {
   myBirthdate: null,
   spouseBirthdate: null,
   targetRetirementDate: null,
-  myAgeNow: null,
-  spouseAgeNow: null,
   startSocialSecurity: null,
   spouseStartSocialSecurity: null,
 
@@ -127,6 +124,7 @@ const App = () => {
   }
 
   const [enteredValues, setEnteredValues] = useState<AllInputValues>(loadSavedValues());
+  const [showTable, setShowTable] = useState<boolean>(false);
   
   const handleSave = () => {
     localStorage.setItem('inputValues', JSON.stringify(enteredValues));
@@ -138,6 +136,11 @@ const App = () => {
       ...newValues,
     };
     setEnteredValues(updatedValues);
+    setShowTable(false); // hide the table whenever the user changes the input fields?
+  }
+
+  const disableCheck = (): boolean => {
+    return Object.values(enteredValues).some(value => value === null);
   }
 
   return (
@@ -153,9 +156,16 @@ const App = () => {
 
       <InputForm enteredValues={enteredValues} updateValues={updateValues} />
 
-      <Button variant="contained" style={{ marginTop: '3rem' }} onClick={handleSave}>
-        Save to Local Storage
-      </Button>
+      <div style={{display: 'flex', flexDirection: 'row', justifyContent: 'center', alignItems: 'center', gap: '3rem', marginTop: '3rem', marginBottom: '3rem'}}>
+        <Button variant="contained" onClick={handleSave}>
+          Save to Local Storage
+        </Button>
+        <Button variant="contained" onClick={() => setShowTable(true)} disabled={disableCheck()}>
+          Generate the Output Table
+        </Button>
+      </div>
+
+      {showTable && <OutputTable enteredValues={enteredValues} />}
     </Box>
   )
 }
