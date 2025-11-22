@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import { Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from "@mui/material";
 import type { AllInputValues } from "./App";
 import { useEffect, useState } from "react";
@@ -50,12 +51,8 @@ const Headers = [
 const OutputTable = ({ enteredValues }: OutputTableProps) => {
     const [tableData, setTableData] = useState<CalculatedTableRow[]>([]);
 
-    const nullCheck = (): boolean => {
-        return Object.values(enteredValues).some(value => value === null);
-    }
-
     useEffect(() => {
-        if(!nullCheck()) {
+        if (!Object.values(enteredValues).some(value => value === null)) {
             calculateData();
         }
     }, [enteredValues]);
@@ -72,9 +69,9 @@ const OutputTable = ({ enteredValues }: OutputTableProps) => {
             currRow.ageSpouse = currTableData[lastIdx].ageSpouse + 1;
 
             if (currRow.year < enteredValues.targetRetirementDate!.year()) {
-                currRow.begInvPortValue = currTableData[lastIdx].begInvPortValue + enteredValues.yearlyInvestmentChange!;
+                currRow.begInvPortValue = currTableData[lastIdx].endInvPortValue + enteredValues.yearlyInvestmentChange!;
             } else {
-                currRow.begInvPortValue = currTableData[lastIdx].begInvPortValue;
+                currRow.begInvPortValue = currTableData[lastIdx].endInvPortValue;
             }
 
             currRow.begPrimeResidenceValue = currTableData[lastIdx].endPrimeResidenceValue;
@@ -87,21 +84,29 @@ const OutputTable = ({ enteredValues }: OutputTableProps) => {
                     currRow.spendNeed = 0;
                 }
             } else {
-                currTableData[lastIdx].spendNeed * (1 + (enteredValues.rateOfInflationAfterRetirement! / 100));
+                currRow.spendNeed = currTableData[lastIdx].spendNeed * (1 + (enteredValues.rateOfInflationAfterRetirement! / 100));
             }
 
             if (currRow.year < enteredValues.startSocialSecurity!.year()) {
                 currRow.totalGrossSSIncomeSelf = 0;
             } else {
-                currRow.totalGrossSSIncomeSelf = determineSSIncomeFromYearSelf() * 
-                    (((1 + (enteredValues.rateOfInflationAfterRetirement! / 100)) ^ (currRow.year - enteredValues.startSocialSecurity!.year())) * 12);
+                currRow.totalGrossSSIncomeSelf = 
+                    determineSSIncomeFromYearSelf()
+                    * 
+                    ((1 + (enteredValues.rateOfInflationAfterRetirement! / 100)) ** (currRow.year - enteredValues.startSocialSecurity!.year()))
+                    *
+                    12;
             }
 
             if (currRow.year < enteredValues.spouseStartSocialSecurity!.year()) {
                 currRow.totalGrossSSIncomeSpouse = 0;
             } else {
-                currRow.totalGrossSSIncomeSpouse = determineSSIncomeFromYearSpouse() * 
-                    (((1 + (enteredValues.rateOfInflationAfterRetirement! / 100)) ^ (currRow.year - enteredValues.spouseStartSocialSecurity!.year())) * 12);
+                currRow.totalGrossSSIncomeSpouse =
+                    determineSSIncomeFromYearSpouse()
+                    * 
+                    ((1 + (enteredValues.rateOfInflationAfterRetirement! / 100)) ** (currRow.year - enteredValues.spouseStartSocialSecurity!.year()))
+                    *
+                    12;
             }
 
             if (currTableData[lastIdx].realEstateAndOtherIncome === 0) {
@@ -114,10 +119,10 @@ const OutputTable = ({ enteredValues }: OutputTableProps) => {
                 currRow.realEstateAndOtherIncome = currTableData[lastIdx].realEstateAndOtherIncome * (1 + (enteredValues.rateOfInflationAfterRetirement! / 100));
             }
 
-            if (currRow.year >= 0) { // TODO: FIX HERE
+            if (currRow.year >= enteredValues.targetRetirementDate!.year()) {
                 currRow.investWithdrawalIncome = (currRow.spendNeed
-                                                    - (1 - (enteredValues.socialSecurityIncome! / 100) * (enteredValues.taxRate! / 100) * (currRow.totalGrossSSIncomeSelf + currRow.totalGrossSSIncomeSpouse))
-                                                    - (1 - (enteredValues.realEstateIncome! / 100) * (enteredValues.taxRate! / 100) * currRow.realEstateAndOtherIncome))
+                                                    - ((1 - (enteredValues.socialSecurityIncome! / 100) * (enteredValues.taxRate! / 100)) * (currRow.totalGrossSSIncomeSelf + currRow.totalGrossSSIncomeSpouse))
+                                                    - ((1 - (enteredValues.realEstateIncome! / 100) * (enteredValues.taxRate! / 100)) * currRow.realEstateAndOtherIncome))
                                                 / (1 - (enteredValues.investmentWithdrawalIncome! / 100) * (enteredValues.taxRate! / 100));
             } else {
                 currRow.investWithdrawalIncome = 0;
@@ -178,15 +183,23 @@ const OutputTable = ({ enteredValues }: OutputTableProps) => {
         if (firstRow.year < enteredValues.startSocialSecurity!.year()) {
             firstRow.totalGrossSSIncomeSelf = 0;
         } else {
-            firstRow.totalGrossSSIncomeSelf = determineSSIncomeFromYearSelf() * 
-                (((1 + (enteredValues.rateOfInflationAfterRetirement! / 100)) ^ (firstRow.year - enteredValues.startSocialSecurity!.year())) * 12);
+            firstRow.totalGrossSSIncomeSelf =
+                determineSSIncomeFromYearSelf()
+                * 
+                ((1 + (enteredValues.rateOfInflationAfterRetirement! / 100)) ** (firstRow.year - enteredValues.startSocialSecurity!.year()))
+                *
+                12;
         }
 
         if (firstRow.year < enteredValues.spouseStartSocialSecurity!.year()) {
             firstRow.totalGrossSSIncomeSpouse = 0;
         } else {
-            firstRow.totalGrossSSIncomeSpouse = determineSSIncomeFromYearSpouse() * 
-                (((1 + (enteredValues.rateOfInflationAfterRetirement! / 100)) ^ (firstRow.year - enteredValues.spouseStartSocialSecurity!.year())) * 12);
+            firstRow.totalGrossSSIncomeSpouse = 
+                determineSSIncomeFromYearSpouse()
+                * 
+                ((1 + (enteredValues.rateOfInflationAfterRetirement! / 100)) ** (firstRow.year - enteredValues.spouseStartSocialSecurity!.year())) 
+                * 
+                12;
         }
 
         if (firstRow.year < enteredValues.targetRetirementDate!.year()) {
@@ -197,7 +210,7 @@ const OutputTable = ({ enteredValues }: OutputTableProps) => {
             firstRow.realEstateAndOtherIncome = NaN;
         }
 
-        if (firstRow.year >= 0) { // TODO: FIX HERE
+        if (firstRow.year >= enteredValues.targetRetirementDate!.year()) {
             firstRow.investWithdrawalIncome = (firstRow.spendNeed
                                                    - (1 - (enteredValues.socialSecurityIncome! / 100) * (enteredValues.taxRate! / 100) * (firstRow.totalGrossSSIncomeSelf + firstRow.totalGrossSSIncomeSpouse))
                                                    - (1 - (enteredValues.realEstateIncome! / 100) * (enteredValues.taxRate! / 100) * firstRow.realEstateAndOtherIncome))
